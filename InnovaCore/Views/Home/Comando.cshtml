@@ -1,0 +1,201 @@
+﻿@model InnovaCore.ViewModels.ViewModelDashboard
+@{
+    ViewData["Title"] = "Terminal de Comando";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #888;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        /* Seguindo a fonte das suas outras páginas */
+        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .dashboard-wrapper {
+        padding: 2rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Título alinhado com a Index/Hub */
+    .dashboard-header h1 {
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -1px; /* Letras juntas como na sua Logo */
+        font-size: 2.2rem;
+        margin-bottom: 0;
+    }
+
+    /* Metric Cards */
+    .metric-card {
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 25px;
+        padding: 1.5rem;
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #333;
+        }
+
+    /* Números: Usando Inter com peso máximo para coerência */
+    .metric-value {
+        font-size: 3.2rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-top: 1rem;
+        letter-spacing: -2px; /* Dá o ar tecnológico sem mudar a fonte */
+    }
+
+    .icon-box-print {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .chart-container-print {
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        border-radius: 30px;
+        padding: 2rem;
+        height: 100%;
+    }
+
+    .bar-print {
+        width: 35px;
+        background: var(--cyan-neon);
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .btn-neon-cyan {
+        background: var(--cyan-neon);
+        color: #000;
+        font-weight: 900;
+        font-size: 0.7rem;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .donut-print {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 18px solid var(--purple-neon);
+        border-left-color: var(--cyan-neon);
+        border-top-color: var(--cyan-neon);
+        margin: 1.5rem auto;
+        filter: drop-shadow(0 0 10px rgba(112, 0, 255, 0.3));
+    }
+
+    .label-caps {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--text-gray);
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8 text-center text-md-start">
+            <div class="dashboard-header">
+                <h1>DASHBOARD</h1>
+                <p class="text-muted small mt-2 fw-light">Telemetria em tempo real e métricas de performance do terminal.</p>
+            </div>
+        </div>
+        <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
+            <button class="btn btn-outline-secondary btn-sm text-white border-secondary me-2 px-3 fw-bold" style="font-size: 0.7rem; border-radius: 10px;">EXPORTAR</button>
+            <button class="btn btn-neon-cyan">RELATÓRIO DO SISTEMA</button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="icon-box-print" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan-neon);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="label-caps mt-3">Total de Tarefas</div>
+                <div class="metric-value text-white">@Model.VwDashboardQtde.TotalDeTarefas</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="icon-box-print" style="background: rgba(112, 0, 255, 0.15); color: var(--purple-neon);">
+                    <i class="bi bi-clock-fill"></i>
+                </div>
+                <div class="label-caps mt-3">Aguardando resposta</div>
+                <div class="metric-value text-white">@Model.VwDashboardQtde.SolicitacoesPendentes</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="icon-box-print" style="background: rgba(0, 255, 157, 0.15); color: #00ff9d;">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div class="label-caps mt-3">Em andamento</div>
+                <div class="metric-value text-white">@Model.VwDashboardQtde.TarefasEmAndamento</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="metric-card">
+                <div class="icon-box-print" style="background: rgba(255, 255, 255, 0.05); color: #444;">
+                    <i class="bi bi-archive-fill"></i>
+                </div>
+                <div class="label-caps mt-3">A fazer</div>
+                <div class="metric-value text-muted">@Model.VwDashboardQtde.TarefasAComecar</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="chart-container-print">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold m-0 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Alocação por Setor</h5>
+                    <span class="label-caps" style="font-size: 0.55rem;">LIVE STREAM // 30D</span>
+                </div>
+                <div class="d-flex align-items-end justify-content-around" style="height: 200px; padding-bottom: 10px;">
+                    <div class="bar-print" style="height: 75%;"></div>
+                    <div class="bar-print" style="height: 45%;"></div>
+                    <div class="bar-print" style="height: 90%;"></div>
+                    <div class="bar-print" style="height: 55%;"></div>
+                    <div class="bar-print" style="height: 35%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="chart-container-print text-center">
+                <h5 class="fw-bold text-start text-uppercase mb-4" style="font-size: 0.9rem; letter-spacing: 1px;">Status</h5>
+                <div class="donut-print"></div>
+                <div class="mt-3">
+                    <div class="label-caps mb-1">Integridade Geral</div>
+                    <span class="fw-900 fs-3" style="color: var(--cyan-neon); font-weight: 900;">94.2%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

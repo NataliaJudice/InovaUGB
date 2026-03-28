@@ -1,0 +1,53 @@
+using InnovaCore.Services.Interfaces;
+using InnovaCore.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+namespace InnovaCore.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly IDashboardService _dashboardService;
+        public HomeController(ILogger<HomeController> logger, IDashboardService dashboardService)
+        {
+            _logger = logger;
+            _dashboardService = dashboardService;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [Authorize] // Só entra aqui quem logou
+        public IActionResult Hub()
+        {
+            return View();
+        }
+
+        [Authorize] // Só entra aqui quem logou
+        public IActionResult HubAdmin()
+        {
+            return View();
+        }
+
+        [Authorize] // Só entra aqui quem logou
+        public async Task<IActionResult> Comando()
+        {
+            var qtdes = await _dashboardService.GetQtdes();
+            ViewModelDashboard vm = new ViewModelDashboard();
+            vm.VwDashboardQtde = qtdes;
+
+            return View(vm);
+        }
+
+
+    }
+}

@@ -1,0 +1,181 @@
+﻿
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: rgba(17, 17, 17, 0.9);
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #a0a0a0;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Hero Section */
+    .hero-container {
+        padding: 4rem 1rem 2rem; /* Mobile padding */
+        background: radial-gradient(circle at center, rgba(0, 229, 255, 0.05) 0%, transparent 70%);
+    }
+
+    @@media (min-width: 768px) {
+        .hero-container { padding: 6rem 1rem 4rem; }
+    }
+
+    .brand-logo {
+        font-size: calc(2.5rem + 3vw); /* Responsivo */
+        font-weight: 900;
+        letter-spacing: -2px;
+        text-transform: uppercase;
+        margin-bottom: 0;
+    }
+
+    .logo-glow {
+        color: var(--cyan-neon);
+        text-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+    }
+
+    .hub-badge {
+        display: inline-block;
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        color: var(--cyan-neon);
+        font-size: 0.7rem;
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        letter-spacing: 3px;
+        background: rgba(0, 229, 255, 0.05);
+    }
+
+    /* Access Cards - Estilo Unificado */
+    .access-card {
+        background: var(--card-bg);
+        border: 1px solid #1a1a1a;
+        border-radius: 2rem;
+        padding: 2.5rem 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: 0.3s ease;
+    }
+
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+    }
+
+    .envio-icon { background: rgba(0, 229, 255, 0.1); color: var(--cyan-neon); border: 1px solid rgba(0, 229, 255, 0.2); }
+    .monitor-icon { background: rgba(112, 0, 255, 0.1); color: var(--purple-neon); border: 1px solid rgba(112, 0, 255, 0.2); }
+
+    .feature-text {
+        font-size: 0.95rem;
+        color: var(--text-gray);
+        line-height: 1.6;
+    }
+
+    /* Botão de Entrada */
+    .btn-enter {
+        background: var(--cyan-neon);
+        color: #000;
+        font-weight: 800;
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .btn-enter:hover {
+        transform: translateY(-2px);
+        background: #fff;
+        box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+    }
+
+    .about-section {
+        padding: 4rem 1.5rem;
+        border-top: 1px solid #111;
+    }
+</style>
+
+<div class="container-fluid hero-container text-center">
+    <div class="hub-badge mb-4">PLATAFORMA V4.0</div>
+    
+    <h1 class="brand-logo mb-3">
+        <span class="text-white">INOVA</span><span class="logo-glow">UGB</span>
+    </h1>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-11 col-md-8 col-lg-6">
+            <p class="fs-5 fw-light text-secondary">
+                Acelere sua jornada de inovação. Uma ferramenta para transformar ideias em projetos rastreáveis e eficientes.
+            </p>
+        </div>
+    </div>
+
+    <div class="mb-5 pb-4">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-enter btn-lg">
+            Acessar Sistema <i class="bi bi-chevron-right ms-2"></i>
+        </a>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row g-4 justify-content-center">
+            
+            <div class="col-12 col-md-6 col-lg-5">
+                <div class="access-card">
+                    <div class="icon-box envio-icon">
+                        <i class="bi bi-rocket-takeoff-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3 h4">ENVIE SOLICITAÇÕES</h3>
+                    <p class="feature-text mb-0">
+                        Envie suas solicitações de inovação de forma simplificada. Utilize nossa ferramenta para detalhar seus protótipos e requisitar os recursos necessários.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-5">
+                <div class="access-card">
+                    <div class="icon-box monitor-icon">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3 h4">MONITORE PEDIDOS</h3>
+                    <p class="feature-text mb-0">
+                        Acompanhe o andamento dos seus pedidos em tempo real. Tenha total visibilidade sobre o status de aprovação e execução de cada fluxo enviado.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container about-section text-center">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <h4 class="text-white mb-4 fw-bold letter-spacing-2">NOSSO INTUITO</h4>
+            <p class="feature-text">
+                O <strong>InnovaCore</strong> nasceu para eliminar a burocracia na gestão de ideias. 
+                Permitimos que inventores e gestores falem a mesma língua através de um pipeline digital transparente, 
+                garantindo que cada recurso seja alocado onde a inovação realmente acontece.
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer class="py-4 text-center border-top border-dark">
+    <small class="text-muted">&copy; 2026 InnovaCore - Hub de Engenharia Criativa</small>
+</footer>

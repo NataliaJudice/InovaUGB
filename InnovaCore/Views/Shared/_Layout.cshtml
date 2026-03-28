@@ -1,0 +1,267 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InnovaCore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+            --bg-black: #050505;
+            --sidebar-bg: #0a0a0a;
+            --cyan-neon: #00e5ff;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: #fff;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- SIDEBAR BASE --- */
+        #sidebar {
+            width: var(--sidebar-collapsed-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--sidebar-bg);
+            border-right: 1px solid #1a1a1a;
+            z-index: 1100;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar.expanded { width: var(--sidebar-width); }
+
+        /* --- HEADER DA SIDEBAR --- */
+        .sidebar-header {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 25px;
+            transition: 0.3s;
+        }
+
+        #sidebar.expanded .sidebar-header {
+            justify-content: space-between;
+        }
+
+        .brand-text {
+            display: none;
+            font-weight: 900;
+            color: var(--cyan-neon);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        #sidebar.expanded .brand-text { display: block; }
+
+        #sidebarToggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        #sidebarToggle:hover { color: var(--cyan-neon); }
+
+        /* --- LINKS --- */
+        .nav-link-cyber {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .nav-link-cyber:hover {
+            color: var(--cyan-neon);
+            background: rgba(0, 229, 255, 0.05);
+        }
+
+        .nav-link-cyber i {
+            min-width: 30px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .link-text {
+            display: none;
+            margin-left: 20px;
+            white-space: nowrap;
+        }
+
+        #sidebar.expanded .link-text { display: block; }
+
+        /* --- CONTEÚDO --- */
+        #content {
+            /* Margem dinâmica baseada no login */
+            margin-left: @(SignInManager.IsSignedIn(User) ? "var(--sidebar-collapsed-width)" : "0");
+            transition: all 0.3s;
+            min-height: 100vh;
+        }
+
+        #content.shifted { margin-left: var(--sidebar-width); }
+
+        /* --- MOBILE --- */
+        @@media (max-width: 992px) {
+            #sidebar {
+                left: calc(-1 * var(--sidebar-width));
+                width: var(--sidebar-width) !important;
+            }
+            #sidebar.active { left: 0; }
+            #sidebar .brand-text, #sidebar .link-text { display: block; }
+            #content { margin-left: 0 !important; }
+
+            .mobile-header {
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                background: var(--sidebar-bg);
+                border-bottom: 1px solid #1a1a1a;
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.8);
+                backdrop-filter: blur(4px);
+                z-index: 1050;
+            }
+            .overlay.show { display: block; }
+        }
+
+        @@media (min-width: 993px) {
+            .mobile-header { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    @* SÓ RENDERIZA A SIDEBAR SE O USUÁRIO ESTIVER LOGADO *@
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <span class="brand-text">InovaUGB</span>
+                <button id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+
+            <nav class="mt-4 flex-grow-1">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-link-cyber" asp-controller="Tarefa" asp-action="TodasAsTarefas">
+                        <i class="bi bi-kanban"></i>
+                        <span class="link-text">Monitoramento de projetos</span>
+                    </a>
+                    <a class="nav-link-cyber" asp-controller="Solicitacoes" asp-action="ListarPendentes">
+                        <i class="bi bi-card-list"></i>
+                        <span class="link-text">Propostas pendentes</span>
+                    </a>
+                }
+
+                <a class="nav-link-cyber" asp-controller="Solicitacoes" asp-action="Create">
+                    <i class="bi bi-plus-square-fill"></i>
+                    <span class="link-text">Nova Proposta</span>
+                </a>
+                 <a class="nav-link-cyber" asp-controller="Solicitacoes" asp-action="ListarSolicitacoesUsuario">
+    <i class="bi bi-list-ul" ></i>
+    <span class="link-text">Minhas Propostas</span>
+</a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-link-cyber" asp-controller="Home" asp-action="Comando">
+                        <i class="bi bi-shield-lock-fill text-info"></i>
+                        <span class="link-text text-info">Comando Root</span>
+                    </a>
+                }
+            </nav>
+
+          <div class="mt-auto border-top border-dark">
+    <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-none"></form>
+    
+    <a class="nav-link-cyber text-danger" href="javascript:document.getElementById('logoutForm').submit()" title="Encerrar Sessão">
+        <i class="bi bi-power"></i>
+        <span class="link-text">Sair do Sistema</span>
+    </a>
+</div>
+        </aside>
+    }
+
+    <div id="content">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <header class="mobile-header">
+                <button class="btn btn-link text-white p-0" onclick="toggleMobile()">
+                    <i class="bi bi-list fs-2"></i>
+                </button>
+                <span class="ms-3 fw-bold" style="color:var(--cyan-neon)">INNOVACORE</span>
+            </header>
+        }
+
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('overlay');
+
+        // Lógica Desktop corrigida
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                if (window.innerWidth > 992) {
+                    sidebar.classList.toggle('expanded');
+                    content.classList.toggle('shifted');
+                } else {
+                    toggleMobile();
+                }
+            });
+        }
+
+        function toggleMobile() {
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('show');
+            }
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', toggleMobile);
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

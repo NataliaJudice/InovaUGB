@@ -1,0 +1,156 @@
+﻿@{
+    ViewData["Title"] = "Central de Comando";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #666;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .status-line {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        color: var(--purple-neon);
+        font-weight: 800;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-line::before {
+        content: "";
+        width: 30px;
+        height: 2px;
+        background: var(--purple-neon);
+        display: inline-block;
+    }
+
+    .main-headline {
+        font-size: calc(2.5rem + 3vw);
+        font-weight: 900;
+        line-height: 0.9;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        margin: 1.5rem 0;
+    }
+
+    .text-glow-purple {
+        color: var(--purple-neon);
+        text-shadow: 0 0 20px rgba(112, 0, 255, 0.5);
+    }
+
+    /* Cards de Transição */
+    .hub-card {
+        background: var(--card-bg);
+        border: 1px solid #1a1a1a;
+        border-radius: 30px;
+        padding: 3rem;
+        height: 100%;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hub-card:hover {
+        transform: translateY(-10px);
+        background: #12161d;
+    }
+
+    /* Variantes de Card */
+    .card-criativo:hover { border-color: var(--cyan-neon); box-shadow: 0 0 30px rgba(0, 229, 255, 0.1); }
+    .card-comando:hover { border-color: var(--purple-neon); box-shadow: 0 0 30px rgba(112, 0, 255, 0.1); }
+
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        font-size: 1.8rem;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .hub-card h2 {
+        font-size: 1.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .hub-card p {
+        color: var(--text-gray);
+        line-height: 1.6;
+    }
+
+    .access-tag {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 4px 12px;
+        border-radius: 5px;
+        text-transform: uppercase;
+    }
+
+    .tag-cyan { background: rgba(0, 229, 255, 0.1); color: var(--cyan-neon); }
+    .tag-purple { background: rgba(112, 0, 255, 0.1); color: var(--purple-neon); }
+</style>
+
+<div class="container py-5">
+    <div class="status-line mb-4">
+        Nível de Acesso: Administrador
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h1 class="main-headline">
+                O que vamos fazer<br />
+                <span class="text-glow-purple">Hoje?</span>
+            </h1>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-12 col-md-6">
+            <a asp-controller="Home" asp-action="Hub" class="hub-card card-criativo">
+                <span class="access-tag tag-cyan">Interface Ativa</span>
+                <div class="icon-box" style="color: var(--cyan-neon)">
+                    <i class="bi bi-person-gear"></i>
+                </div>
+                <h2>Enviar Proposta</h2>
+                <p>Acesse o terminal operacional para submeter novos protocolos e monitorar feeds como um usuário padrão.</p>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <a asp-controller="Home" asp-action="Comando" class="hub-card card-comando">
+                <span class="access-tag tag-purple">Root Access</span>
+                <div class="icon-box" style="color: var(--purple-neon)">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <h2>Gerenciar propostas</h2>
+                <p>Diretório de administração. Analise solicitações pendentes, valide fluxos e execute decisões de sistema.</p>
+            </a>
+        </div>
+    </div>
+</div>

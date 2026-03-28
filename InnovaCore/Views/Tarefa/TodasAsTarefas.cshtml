@@ -1,0 +1,299 @@
+﻿@model IEnumerable<InnovaCore.Domain.Entities.Tarefa>
+
+@{
+    Layout = "_Layout";
+}
+
+<style>
+    /* RESET E ROOT */
+    main.container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    :root {
+        --kanban-bg: #050505;
+        --col-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --yellow-neon: #ffca28;
+        --green-neon: #66bb6a;
+        --border-color: #1a1a1a;
+        --card-bg: #161b22;
+    }
+
+    body {
+        background-color: var(--kanban-bg) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .pipeline-container {
+        min-height: 100vh;
+        padding-bottom: 50px;
+    }
+
+    .header-section {
+        padding: 40px 40px 10px 40px;
+    }
+
+    .header-section h1 {
+        font-weight: 900;
+        letter-spacing: 2px;
+        font-size: 2rem;
+        text-transform: uppercase;
+    }
+
+    /* KANBAN WRAPPER */
+    .kanban-wrapper {
+        display: flex;
+        gap: 20px;
+        padding: 20px 40px;
+        overflow-x: auto;
+        align-items: flex-start;
+    }
+
+    .kanban-column {
+        flex: 1;
+        min-width: 320px;
+        background: var(--col-bg);
+        border-radius: 25px;
+        border: 1px solid var(--border-color);
+        padding: 20px;
+    }
+
+    .column-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid;
+    }
+
+    .column-header h3 {
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin: 0;
+    }
+
+    /* CARDS - AJUSTADO PARA EVITAR OVERFLOW */
+    .kanban-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        /* Impede que o card cresça infinitamente para os lados */
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .kanban-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 229, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+
+    .card-id {
+        font-size: 0.65rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        display: block;
+        letter-spacing: 1px;
+    }
+
+    .card-title {
+        font-weight: 700;
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 15px;
+        display: block;
+        line-height: 1.4;
+        /* TRUNCAMENTO DE TEXTO NO CARD */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-footer-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.7rem;
+        color: #888;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        padding-top: 12px;
+    }
+
+    /* MODAL CONSERTADO */
+    .modal-content {
+        background-color: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 28px;
+        color: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+    }
+
+    .modal-header { border: none; padding-bottom: 1rem; }
+    .modal-footer { border: none; padding-top: 1rem; }
+    
+    /* TITULO NO MODAL - AJUSTADO PARA QUEBRAR LINHA */
+    .modal-title {
+        word-break: break-all;
+        line-height: 1.2;
+    }
+
+    .detail-label { 
+        color: var(--cyan-neon); 
+        font-size: 0.65rem; 
+        font-weight: 800; 
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .desc-box {
+        background: #050505;
+        border: 1px solid #21262d;
+        border-radius: 15px;
+        padding: 20px;
+        color: #8b949e;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        /* CONSERTO DO BUG DE TEXTO SAINDO DO MODAL */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-all;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .sortable-ghost {
+        opacity: 0.1;
+        background: var(--cyan-neon) !important;
+    }
+</style>
+
+<div class="pipeline-container">
+    <div class="header-section">
+        <h1>FLUXO DE <span style="color:var(--cyan-neon)">TAREFAS</span></h1>
+    </div>
+
+    <div class="kanban-wrapper">
+        @foreach (var status in new[] { 
+            new { Id = 7, Nome = "A Fazer", Cor = "var(--cyan-neon)", Label = "A Fazer" },
+            new { Id = 8, Nome = "Em Andamento", Cor = "var(--yellow-neon)", Label = "Em Andamento" },
+            new { Id = 9, Nome = "Concluído", Cor = "var(--green-neon)", Label = "Concluído" } 
+        })
+        {
+            <div class="kanban-column">
+                <div class="column-header" style="border-color: @status.Cor;">
+                    <h3 style="color: @status.Cor;">@status.Nome</h3>
+                    <span class="badge rounded-pill bg-dark border border-secondary text-white-50">@Model.Count(t => t.IdTarefaStatus == status.Id)</span>
+                </div>
+                <div class="card-list" data-status-id="@status.Id" data-color="@status.Cor" data-status-name="@status.Label">
+                    @foreach (var tarefa in Model.Where(t => t.IdTarefaStatus == status.Id))
+                    {
+                        <div class="kanban-card" data-id="@tarefa.Id" 
+                             data-titulo="@tarefa.Solicitacao?.Titulo" 
+                             data-desc="@tarefa.Solicitacao?.Descricao"
+                             data-setor="@tarefa.Solicitacao?.Tema?.TituloTema"
+                             data-date="@tarefa.Datacadastro?.ToString("dd/MM/yyyy HH:mm")"
+                             onclick="verDetalhes(this)">
+                            <span class="card-id js-card-id" style="color: @status.Cor">#@tarefa.Id</span>
+                            <span class="card-title" title="@tarefa.Solicitacao?.Titulo">@tarefa.Solicitacao?.Titulo</span>
+                            <div class="card-footer-info">
+                                <span><i class="bi bi-clock me-1"></i> @tarefa.Datacadastro?.ToString("dd/MM")</span>
+                                <i class="bi bi-arrow-right-short fs-5"></i>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="modalTarefa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex flex-column align-items-start">
+                <p id="mSetor" class="detail-label"></p>
+                <h4 class="modal-title fw-900 text-white w-100" id="mTitulo"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4 mt-2">
+                    <div class="col-6">
+                        <p class="detail-label">Timestamp</p>
+                        <small id="mDate" class="text-white-50 d-block"></small>
+                    </div>
+                    <div class="col-6 text-end">
+                        <p class="detail-label">Status</p>
+                        <span id="mStatus" class="fw-bold d-block"></span>
+                    </div>
+                </div>
+                
+                <p class="detail-label">Especificações Técnicas</p>
+                <div id="mDesc" class="desc-box"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark w-100 border-secondary rounded-pill fw-bold" data-bs-dismiss="modal">FECHAR TERMINAL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.querySelectorAll('.card-list').forEach(el => {
+            new Sortable(el, {
+                group: 'kanban',
+                animation: 250,
+                ghostClass: 'sortable-ghost',
+                onEnd: function (evt) {
+                    const tarefaId = evt.item.getAttribute('data-id');
+                    const novoStatusId = evt.to.getAttribute('data-status-id');
+                    const novaCor = evt.to.getAttribute('data-color');
+                    const cardIdSpan = evt.item.querySelector('.js-card-id');
+                    if (cardIdSpan) cardIdSpan.style.color = novaCor;
+                    updateTarefaStatus(tarefaId, novoStatusId);
+                }
+            });
+        });
+
+        function verDetalhes(card) {
+            const titulo = card.getAttribute('data-titulo');
+            const desc = card.getAttribute('data-desc');
+            const setor = card.getAttribute('data-setor');
+            const date = card.getAttribute('data-date');
+            const statusName = card.parentElement.getAttribute('data-status-name');
+            const cor = card.parentElement.getAttribute('data-color');
+
+            document.getElementById('mTitulo').innerText = titulo;
+            document.getElementById('mDesc').innerText = desc || "Nenhuma descrição técnica disponível.";
+            document.getElementById('mSetor').innerText = setor || "Geral";
+            document.getElementById('mDate').innerText = date;
+            
+            const statusEl = document.getElementById('mStatus');
+            statusEl.innerText = statusName;
+            statusEl.style.color = cor;
+
+            new bootstrap.Modal(document.getElementById('modalTarefa')).show();
+        }
+
+        function updateTarefaStatus(id, status) {
+            fetch('/Tarefa/MudarStatus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idTarefa: parseInt(id), novoStatus: parseInt(status) })
+            });
+        }
+    </script>
+}

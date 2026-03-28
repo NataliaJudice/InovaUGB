@@ -1,0 +1,222 @@
+﻿@using System.Web
+@model IEnumerable<InnovaCore.Domain.Entities.Temas>
+
+@{
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #a0a0a0;
+        --input-bg: #161b22;
+        --border-dim: #30363d;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Wrapper Flexível que se adapta a qualquer tela */
+    .wrapper-protocolo {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Melhor para scroll no mobile */
+        min-height: 100vh;
+        padding: clamp(15px, 5vw, 40px);
+    }
+
+    .container-protocolo {
+        width: 100%;
+        max-width: 550px;
+        background: var(--card-bg);
+        padding: clamp(25px, 6vw, 45px);
+        border-radius: 28px;
+        border: 1px solid var(--border-dim);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    /* Botão Voltar mais visível no Mobile */
+    .btn-voltar {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        padding: 8px 0;
+        transition: 0.3s;
+    }
+
+        .btn-voltar:hover {
+            color: var(--cyan-neon);
+        }
+
+    /* Cabeçalho Responsivo */
+    .header-protocolo h1 {
+        font-size: clamp(1.8rem, 7vw, 2.5rem);
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin-bottom: 10px;
+        line-height: 1.1;
+    }
+
+    .text-cyan {
+        color: var(--cyan-neon);
+        text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+    }
+
+    .subtitulo {
+        color: var(--text-gray);
+        font-size: 0.95rem;
+        margin-bottom: 40px;
+        line-height: 1.5;
+    }
+
+    /* Inputs Estilizados para Mobile */
+    .field-group {
+        margin-bottom: 25px;
+    }
+
+    .label-cyber {
+        display: block;
+        color: var(--cyan-neon);
+        font-size: 0.7rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        padding-left: 4px;
+    }
+
+    .input-cyber {
+        width: 100%;
+        background: var(--input-bg);
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 18px; /* Área de toque aumentada */
+        color: #fff;
+        font-size: 1rem; /* Evita auto-zoom no iOS */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+        appearance: none; /* Remove estilos padrão do browser */
+    }
+
+        .input-cyber::placeholder {
+            color: #484f58;
+        }
+
+        .input-cyber:focus {
+            outline: none;
+            background: #0d1117;
+            border-color: var(--cyan-neon);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+        }
+
+    /* Estilo para o Select (Dropdown) */
+    select.input-cyber {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300e5ff' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 20px center;
+        padding-right: 50px;
+    }
+
+    .textarea-cyber {
+        min-height: 140px;
+        line-height: 1.6;
+        resize: vertical;
+    }
+
+    /* Botão de Transmissão Full-Width no Mobile */
+    .btn-transmitir {
+        width: 100%;
+        background: linear-gradient(45deg, var(--cyan-neon), #00b8d4);
+        color: #000;
+        border: none;
+        padding: 20px;
+        border-radius: 18px;
+        font-weight: 900;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 10px;
+        transition: 0.4s;
+    }
+
+        .btn-transmitir:active {
+            transform: scale(0.96); /* Efeito de clique no celular */
+        }
+
+        .btn-transmitir:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        }
+
+    /* Helper de validação */
+    .input-cyber:invalid:focus {
+        border-color: #ff4646;
+    }
+
+</style>
+
+<div class="wrapper-protocolo">
+    <div class="container-protocolo">
+        <div class="header-protocolo">
+            <a href="javascript:history.back()" class="btn-voltar">
+                <i class="bi bi-arrow-left-circle-fill"></i> Sair do Terminal
+            </a>
+            <h1>NOVA <span class="text-cyan">SOLICITAÇÃO</span></h1>
+            <p class="subtitulo">Preencha os dados abaixo para processar sua solicitação no sistema.</p>
+        </div>
+
+        <form asp-action="Create" method="post" autocomplete="off">
+            <div class="field-group">
+                <label class="label-cyber" for="Titulo">Título do Projeto</label>
+                <input id="Titulo" name="Titulo" type="text"
+                       class="input-cyber"
+                       placeholder="Ex: Sistema Aether 2.0"
+                       required />
+            </div>
+
+            <div class="field-group">
+                <label class="label-cyber" for="IdTema">Área de Destino</label>
+                <select id="IdTema" name="IdTema" class="input-cyber" required>
+                    <option value="" disabled selected>Selecione o setor...</option>
+                    @foreach (var tema in Model)
+                    {
+                        <option value="@tema.Id">@tema.TituloTema</option>
+                    }
+                </select>
+            </div>
+
+            <div class="field-group">
+                <label class="label-cyber" for="Descricao">Relatório Descritivo</label>
+                <textarea id="Descricao" name="Descricao"
+                          class="input-cyber textarea-cyber"
+                          placeholder="Descreva detalhadamente o objetivo desta solicitação..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-transmitir">
+                <span>TRANSMITIR DADOS</span>
+                <i class="bi bi-broadcast-pin" style="font-size: 1.2rem;"></i>
+            </button>
+        </form>
+    </div>
+</div>
+</div>

@@ -1,0 +1,179 @@
+﻿@{
+    ViewData["Title"] = "Hub Operacional";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #666;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Header e Status */
+    .status-line {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        color: var(--cyan-neon);
+        font-weight: 800;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-line::before {
+        content: "";
+        width: 30px;
+        height: 2px;
+        background: var(--cyan-neon);
+        display: inline-block;
+    }
+
+    /* Tipografia Principal */
+    .main-headline {
+        font-size: calc(2.5rem + 3vw);
+        font-weight: 900;
+        line-height: 0.9;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        margin: 1.5rem 0;
+    }
+
+    .text-glow-cyan {
+        color: var(--cyan-neon);
+        text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+    }
+
+    .sub-instruction {
+        color: var(--text-gray);
+        font-size: 1.1rem;
+        font-weight: 400;
+        max-width: 500px;
+    }
+
+    /* Estilização dos Cards */
+    .op-card {
+        background: var(--card-bg);
+        border: 1px solid #1a1a1a;
+        border-radius: 30px;
+        padding: 2.5rem;
+        height: 100%;
+        transition: 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .op-card:hover {
+        border-color: #333;
+        background: #12161d;
+        transform: translateY(-5px);
+    }
+
+    .icon-square {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cyan-icon { color: var(--cyan-neon); background: rgba(0, 229, 255, 0.05); }
+    .purple-icon { color: var(--purple-neon); background: rgba(112, 0, 255, 0.05); }
+
+    .op-card h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+    }
+
+    .op-card p {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+
+    /* Links de Execução */
+    .op-link {
+        margin-top: auto;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+    }
+
+    .cyan-link { color: var(--cyan-neon); }
+    .purple-link { color: var(--purple-neon); }
+
+    .op-card:hover .op-link {
+        gap: 15px;
+    }
+
+</style>
+
+<div class="container py-5">
+    <div class="status-line mb-4">
+        Status do Sistema: Solicitante
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h1 class="main-headline">
+                Pronto para<br />
+                <span class="text-glow-cyan">Inovar ?</span>
+            </h1>
+            <p class="sub-instruction">
+                Envie novas solicitações e acompanhe o andamento das tarefas.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-5">
+            <a asp-controller="Solicitacoes" asp-action="Create" class="op-card">
+                <div class="icon-square cyan-icon">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <h2>Nova Proposta</h2>
+                <p>Inicie uma nova solicitação de inovação ou alocação de recursos.</p>
+                <div class="op-link cyan-link">
+                    Executar <i class="bi bi-chevron-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-5">
+            <a asp-controller="Solicitacoes" asp-action="ListarSolicitacoesUsuario" class="op-card">
+                <div class="icon-square purple-icon">
+                    <i class="bi bi-list-check"></i>
+                </div>
+                <h2>Minhas Propostas</h2>
+                <p>Monitore o status em tempo real e a telemetria das tarefas solicitadas por você.</p>
+                <div class="op-link purple-link">
+                    Acessar Feeds <i class="bi bi-chevron-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

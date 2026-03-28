@@ -1,0 +1,291 @@
+﻿@using System.Web
+@model IEnumerable<InnovaCore.Domain.Entities.Solicitacao>
+
+@{
+    ViewData["Title"] = "Minhas Solicitações";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --purple-neon: #7000ff;
+        --text-gray: #888;
+        --status-pending: #ffca28;
+        --status-approved: #00ff9d;
+        --status-rejected: #ff4646;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .feeds-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(20px, 5vw, 40px) 15px;
+    }
+
+    /* Tipografia Adaptável */
+    .header-feeds h1 {
+        font-weight: 900;
+        letter-spacing: 2px;
+        font-size: clamp(1.8rem, 8vw, 2.8rem); /* Adapta entre mobile e desktop */
+        text-transform: uppercase;
+        margin-bottom: 0;
+    }
+
+    .btn-back-cyber {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        transition: 0.3s;
+    }
+
+    /* Cards Responsivos */
+    .feed-card {
+        background: var(--card-bg);
+        border: 1px solid #1a1a1a;
+        border-radius: 20px;
+        padding: clamp(15px, 4vw, 30px);
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: row; /* Desktop */
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+        cursor: pointer; /* Indica que é clicável */
+    }
+
+    .feed-card:hover {
+        border-color: #333;
+        transform: translateY(-2px);
+        background: #11161d;
+    }
+
+    .feed-content {
+        flex: 1;
+        min-width: 0;
+        margin-right: 15px;
+    }
+
+    .feed-content h3 {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        font-weight: 800;
+        margin: 10px 0 5px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .feed-content p {
+        color: var(--text-gray);
+        font-size: clamp(0.85rem, 3vw, 0.95rem);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limita a 2 linhas no card */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Ajustes Mobile */
+    @@media (max-width: 576px) {
+        .feed-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .feed-status {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    /* Badges e Status */
+    .category-badge {
+        font-size: 0.6rem;
+        font-weight: 900;
+        padding: 4px 8px;
+        border-radius: 5px;
+        background: rgba(0, 229, 255, 0.1);
+        color: var(--cyan-neon);
+    }
+
+    .status-badge-cyber {
+        border: 1px solid;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 0.65rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0,0,0,0.3);
+    }
+
+    .status-kanban { color: var(--cyan-neon); border-color: var(--cyan-neon); }
+    .status-1 { color: var(--status-pending); border-color: var(--status-pending); }
+    .status-2 { color: var(--status-approved); border-color: var(--status-approved); }
+    .status-3 { color: var(--status-rejected); border-color: var(--status-rejected); }
+
+    .btn-justificativa {
+        background: transparent;
+        border: 1px solid var(--status-rejected);
+        color: var(--status-rejected);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .modal-cyber {
+        background: var(--card-bg) !important;
+        border: 1px solid #333 !important;
+        border-radius: 20px !important;
+    }
+    
+    .label-detail {
+        color: var(--text-gray);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 2px;
+    }
+</style>
+
+<div class="feeds-wrapper">
+    <a href="javascript:history.back()" class="btn-back-cyber">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-3 mb-5">
+        <div class="header-feeds">
+            <h1>MINHAS <span class="text-purple-glow">SOLICITAÇÕES</span></h1>
+        </div>
+        <a asp-action="Create" class="btn btn-init-novo">
+            + Iniciar Novo
+        </a>
+    </div>
+
+    <div class="feed-list">
+        @foreach (var item in Model)
+        {
+            @* Atributos data para o Modal de Detalhes *@
+            <div class="feed-card" onclick="verDetalhes('@HttpUtility.JavaScriptStringEncode(item.Titulo)', '@HttpUtility.JavaScriptStringEncode(item.Descricao)', '@item.Tema?.TituloTema', '@item.SolicitacaoStatus?.NomeStatus')">
+                <div class="feed-content">
+                    <span class="category-badge">@item.Tema?.TituloTema</span>
+                    <h3>@item.Titulo</h3>
+                    <p>@item.Descricao</p>
+                </div>
+
+                <div class="feed-status d-flex align-items-center gap-2" onclick="event.stopPropagation();">
+                    @if (item.Tarefa != null && item.Tarefa.TarefaStatus != null)
+                    {
+                        <div class="status-badge-cyber status-kanban">
+                            <i class="bi bi-cpu-fill"></i> @item.Tarefa.TarefaStatus.Nome
+                        </div>
+                    }
+                    else
+                    {
+                        string icone = item.IdSolicitacaoStatus switch {
+                            2 => "bi-check-circle-fill",
+                            3 => "bi-exclamation-octagon-fill",
+                            _ => "bi-clock-history"
+                        };
+
+                        <div class="status-badge-cyber status-@item.IdSolicitacaoStatus">
+                            <i class="bi @icone"></i> @item.SolicitacaoStatus?.NomeStatus
+                        </div>
+
+                        @if (item.IdSolicitacaoStatus == 3)
+                        {
+                            var justificativaJS = HttpUtility.JavaScriptStringEncode(item.JustificativaRejeicao ?? "Nenhuma justificativa fornecida.");
+                            <button class="btn-justificativa" onclick="verJustificativa('@justificativaJS'); event.stopPropagation();">
+                                <i class="bi bi-question-lg"></i>
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="modalJustificativa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-cyber shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title font-weight-bold" style="color: var(--status-rejected);">
+                    <i class="bi bi-info-circle-fill me-2"></i> MOTIVO DA INVIABILIDADE
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="textoJustificativa" class="text-light m-0"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-cyber shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title font-weight-bold text-purple-glow">DETALHES DA SOLICITAÇÃO</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body d-flex flex-column gap-3">
+                <div>
+                    <span class="label-detail">Título</span>
+                    <h4 id="detalheTitulo" class="text-white fw-bold"></h4>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <span class="label-detail">Tema</span>
+                        <span id="detalheTema" class="category-badge"></span>
+                    </div>
+                    <div class="col-6">
+                        <span class="label-detail">Status Atual</span>
+                        <span id="detalheStatus" class="text-white small"></span>
+                    </div>
+                </div>
+                <div>
+                    <span class="label-detail">Descrição Completa</span>
+                    <p id="detalheDescricao" class="text-white-50" style="white-space: pre-wrap;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function verJustificativa(mensagem) {
+        document.getElementById('textoJustificativa').innerText = mensagem;
+        new bootstrap.Modal(document.getElementById('modalJustificativa')).show();
+    }
+
+    function verDetalhes(titulo, descricao, tema, status) {
+        document.getElementById('detalheTitulo').innerText = titulo;
+        document.getElementById('detalheDescricao').innerText = descricao;
+        document.getElementById('detalheTema').innerText = tema;
+        document.getElementById('detalheStatus').innerText = status;
+        new bootstrap.Modal(document.getElementById('modalDetalhes')).show();
+    }
+</script>

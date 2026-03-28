@@ -1,0 +1,271 @@
+﻿@model IEnumerable<InnovaCore.Domain.Entities.Solicitacao>
+
+@{
+    Layout = "_Layout"; 
+}
+
+<style>
+    /* 1. RESET E AJUSTES DE FLUXO */
+    main.container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    :root {
+        --bg-black: #050505;
+        --card-bg: #0d1117;
+        --item-bg: #161b22;
+        --cyan-neon: #00e5ff;
+        --red-neon: #ff3d3d;
+        --text-gray: #888;
+        --border-color: #30363d;
+    }
+
+    body {
+        background-color: var(--bg-black) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .page-wrapper {
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .header-title h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    /* 2. TABELA */
+    .protocol-table-container {
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        padding: 20px;
+        margin-top: 30px;
+        overflow-x: auto;
+    }
+
+    .cyber-table {
+        width: 100%;
+        border-spacing: 0 10px;
+        border-collapse: separate;
+        table-layout: fixed;
+    }
+
+    .col-identificador { width: 50%; }
+    .col-status { width: 15%; }
+    .col-data { width: 15%; }
+    .col-acoes { width: 20%; }
+
+    .cyber-table th {
+        color: var(--cyan-neon);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 10px 20px;
+        font-weight: 800;
+    }
+
+    .protocol-row {
+        background: var(--item-bg);
+        transition: 0.3s;
+    }
+
+    .protocol-row:hover {
+        background: #1c2128;
+    }
+
+    .protocol-row td {
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+
+    .protocol-row td:first-child { border-left: 1px solid var(--border-color); border-radius: 15px 0 0 15px; }
+    .protocol-row td:last-child { border-right: 1px solid var(--border-color); border-radius: 0 15px 15px 0; }
+
+    .text-truncate-cyber {
+        font-weight: 700;
+        font-size: 1.05rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        max-width: 100%;
+    }
+
+    .badge-status {
+        background: rgba(0, 229, 255, 0.1);
+        color: var(--cyan-neon);
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .actions-cell {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-action {
+        background: #0d1117;
+        border: 1px solid #30363d;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-approve:hover { background: var(--cyan-neon); color: #000; border-color: var(--cyan-neon); }
+    .btn-reject:hover { background: var(--red-neon); color: #fff; border-color: var(--red-neon); }
+
+    /* 3. CORREÇÃO DO MODAL (ESTILOS QUE FALTAVAM) */
+    .modal-overlay {
+        display: none; /* Controlado pelo JS */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content-cyber {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-top: 4px solid var(--red-neon); /* Detalhe visual de erro */
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 450px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        animation: modalScaleIn 0.2s ease-out;
+    }
+
+    @@keyframes modalScaleIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="main-content">
+        <div class="header-title">
+            <h1>SOLICITAÇÕES</h1>
+            <p class="text-secondary">Gerenciamento de fluxos e autorizações pendentes.</p>
+        </div>
+
+        <div class="protocol-table-container">
+            <table class="cyber-table">
+                <thead>
+                    <tr>
+                        <th class="col-identificador">Identificador</th>
+                        <th class="col-status">Status</th>
+                        <th class="col-data">Envio</th>
+                        <th class="col-acoes" style="text-align: right;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="protocol-row">
+                            <td>
+                                <span class="text-truncate-cyber" title="@item.Titulo">
+                                    @item.Titulo
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-status">@item.SolicitacaoStatus?.NomeStatus</span>
+                            </td>
+                            <td style="font-size: 0.8rem; color: #555;">
+                                @* Espaço para data se necessário *@
+                            </td>
+                            <td class="actions-cell">
+                                <form asp-action="Aprovar" method="post" style="margin:0;">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn-action btn-approve" title="Aprovar">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                </form>
+
+                                <button type="button" class="btn-action btn-reject" onclick="abrirModal('@item.Id')" title="Rejeitar">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modalRejeicao" class="modal-overlay">
+    <div class="modal-content-cyber">
+        <h3 class="fw-bold mb-3" style="color: var(--red-neon); letter-spacing: 1px;">INTERROMPER FLUXO</h3>
+        <p class="small text-secondary mb-4">Aponte a inconsistência técnica para finalizar o protocolo.</p>
+        
+        <form asp-action="Rejeitar" method="post">
+            <input type="hidden" id="inputModalId" name="IdSolicitacao" />
+            <textarea name="Justificativa" rows="4" 
+                      class="form-control bg-black border-secondary text-white mb-4"
+                      style="border-radius: 12px; resize: none;"
+                      placeholder="Descreva o motivo..." required></textarea>
+
+            <div class="d-flex gap-2">
+                <button type="button" onclick="fecharModal()" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-bold">CANCELAR</button>
+                <button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold" style="background: var(--red-neon); border: none;">CONFIRMAR</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function abrirModal(id) {
+        document.getElementById('inputModalId').value = id;
+        document.getElementById('modalRejeicao').style.display = 'flex';
+        // Impede scroll do body com modal aberto
+        document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal() {
+        document.getElementById('modalRejeicao').style.display = 'none';
+        // Devolve o scroll ao fechar
+        document.body.style.overflow = 'auto';
+    }
+
+    // Fechar ao clicar fora da caixa branca
+    window.onclick = function(event) {
+        var modal = document.getElementById('modalRejeicao');
+        if (event.target == modal) {
+            fecharModal();
+        }
+    }
+</script>

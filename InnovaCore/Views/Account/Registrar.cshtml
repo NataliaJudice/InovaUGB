@@ -1,0 +1,157 @@
+﻿@using InnovaCore.ViewModels
+@model ViewModelRegistro
+
+
+
+<style>
+    /* RESET DE LAYOUT DO ASP.NET */
+    main.container, .container-fluid, .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    body {
+        background-color: #050505 !important;
+        overflow-x: hidden;
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .auth-wrapper {
+        min-height: 100vh;
+        width: 100vw;
+        background-color: #050505;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        padding: 2rem 1rem;
+    }
+
+    /* CARD CYBERPUNK RESPONSIVO */
+    .auth-card {
+        background: #111;
+        border: 1px solid #222;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+        width: 100%;
+        /* O Bootstrap cuidará da largura máxima via classes col-md */
+    }
+
+        .auth-card h2 {
+            color: #00e5ff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+
+    /* INPUTS ESTILIZADOS */
+    .form-label {
+        color: #888;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .cyber-input {
+        background: #000 !important;
+        border: 1px solid #333 !important;
+        color: #fff !important;
+        border-radius: 10px !important;
+        padding: 0.8rem 1rem;
+        transition: 0.3s;
+    }
+
+        .cyber-input:focus {
+            border-color: #00e5ff !important;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2) !important;
+            background: #080808 !important;
+        }
+
+    /* BOTÃO NEON */
+    .btn-register {
+        background: #00e5ff;
+        color: #000;
+        border: none;
+        padding: 1rem;
+        border-radius: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+        .btn-register:hover {
+            background: #fff;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+    .login-link {
+        color: #555;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: 0.3s;
+    }
+
+        .login-link:hover {
+            color: #00e5ff;
+        }
+
+    .text-danger {
+        font-size: 0.8rem;
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+                
+                <div class="auth-card p-4 p-md-5">
+                    <h2 class="text-center mb-4">Registre-se</h2>
+
+                    <form asp-action="Registrar" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Nome de Usuário</label>
+                            <input asp-for="UserName" class="form-control cyber-input" placeholder="Ex: master_user" required />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Identificador (Email)</label>
+                            <input asp-for="Email" type="email" class="form-control cyber-input" placeholder="exemplo@innocore.com" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Chave de Acesso</label>
+                            <input asp-for="Password" type="password" class="form-control cyber-input" placeholder="••••••••" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label">Confirmar Chave</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control cyber-input" placeholder="••••••••" required />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn-register">Inicializar Registro</button>
+                            <a asp-action="Login" class="login-link text-center mt-2">
+                                JÁ POSSUI CREDENCIAIS? VOLTAR AO TERMINAL
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

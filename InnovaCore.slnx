@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="InnovaCore.Data/InnovaCore.Data.csproj" />
+  <Project Path="InnovaCore.Domain/InnovaCore.Domain.csproj" />
+  <Project Path="InnovaCore.Services/InnovaCore.Services.csproj" />
+  <Project Path="InnovaCore/InnovaCore.csproj" />
+</Solution>
