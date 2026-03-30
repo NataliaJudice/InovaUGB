@@ -179,15 +179,15 @@
     <div class="container-protocolo">
         <div class="header-protocolo">
             <a href="javascript:history.back()" class="btn-voltar">
-                <i class="bi bi-arrow-left-circle-fill"></i> Sair do Terminal
+                <i class="bi bi-arrow-left-circle-fill"></i> Sair
             </a>
-            <h1>NOVA <span class="text-cyan">SOLICITAÇÃO</span></h1>
-            <p class="subtitulo">Preencha os dados abaixo para processar sua solicitação no sistema.</p>
+            <h1>NOVA <span class="text-cyan">PROPOSTA</span></h1>
+            <p class="subtitulo">Preencha os dados abaixo para enviar sua proposta.</p>
         </div>
 
         <form asp-action="Create" method="post" autocomplete="off">
             <div class="field-group">
-                <label class="label-cyber" for="Titulo">Título do Projeto</label>
+                <label class="label-cyber" for="Titulo">Título da proposta</label>
                 <input id="Titulo" name="Titulo" type="text"
                        class="input-cyber"
                        placeholder="Ex: Sistema Aether 2.0"
@@ -195,7 +195,7 @@
             </div>
 
             <div class="field-group">
-                <label class="label-cyber" for="IdTema">Área de Destino</label>
+                <label class="label-cyber" for="IdTema">Setor de destino</label>
                 <select id="IdTema" name="IdTema" class="input-cyber" required>
                     <option value="" disabled selected>Selecione o setor...</option>
                     @foreach (var tema in Model)
@@ -206,14 +206,14 @@
             </div>
 
             <div class="field-group">
-                <label class="label-cyber" for="Descricao">Relatório Descritivo</label>
+                <label class="label-cyber" for="Descricao">Descrição da proposta</label>
                 <textarea id="Descricao" name="Descricao"
                           class="input-cyber textarea-cyber"
-                          placeholder="Descreva detalhadamente o objetivo desta solicitação..."></textarea>
+                          placeholder="Descreva detalhadamente o objetivo desta proposta..."></textarea>
             </div>
 
             <button type="submit" class="btn-transmitir">
-                <span>TRANSMITIR DADOS</span>
+                <span> ENVIAR</span>
                 <i class="bi bi-broadcast-pin" style="font-size: 1.2rem;"></i>
             </button>
         </form>
