@@ -16,6 +16,7 @@ namespace InnovaCore.Services.Interfaces
         Task<IEnumerable<Solicitacao>> ListarSolicitacosUsuario(string IdUser);
         Task AprovarSolicitacao(int id);
 
+        Task EnviarEmails(int? id, string userEmail, string tituloTarefa, string descricaoTarefa, string status);
         Task RejeitarSolicitacao(int idSolicitacao, string justificativa);
 
 

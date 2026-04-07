@@ -9,5 +9,6 @@ namespace InnovaCore.Services.Interfaces
     public interface IEmailServices
     {
         Task SendStatusUpdateEmailAsync(string userEmail, string taskTitle, string status);
+        Task SendStatusUpdateEmailAsyncSetores(string setorEmail, string taskTitle, string descricaoTarefa, string status);
     }
 }

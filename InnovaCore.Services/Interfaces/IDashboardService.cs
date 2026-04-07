@@ -10,5 +10,7 @@ namespace InnovaCore.Services.Interfaces
     public interface IDashboardService
     {
         Task<VwDashboardQtde> GetQtdes();
+
+        Task <IEnumerable<VwQtdePorSetor>> GetQtdesPorSetor();    
     }
 }

@@ -10,5 +10,9 @@ namespace InnovaCore.Services.Interfaces
     public interface ISetorService
     {
         Task<IEnumerable<Setor>> ObterSetoresAtivos();
+        Task CriarSetor(Setor setor);
+        Task EditarSetor(int id, Setor setorNovo);
+        Task EnviarEmailSetor(int? id, string taskTitle, string descricaoTarefa, string status);
+        
     }
 }

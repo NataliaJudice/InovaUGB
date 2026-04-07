@@ -1,5 +1,6 @@
 ﻿using InnovaCore.Domain.ViewModels;
 using InnovaCore.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,12 +18,16 @@ namespace InnovaCore.Controllers
             _userManager = userManager;
             _emailService = emailServices;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> TodasAsTarefas(int id)
         {
             var tarefas = await _tarefaService.GetAll();
@@ -30,7 +35,7 @@ namespace InnovaCore.Controllers
         }
 
         [HttpPost]
-
+        [Authorize(Roles = "Admin")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> MudarStatus([FromBody] ViewModelTarefaEStatus model)
         {

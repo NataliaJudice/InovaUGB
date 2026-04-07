@@ -9,13 +9,15 @@ namespace InnovaCore.Services.Services
     {
         private readonly InnovationCoreDbContext _context;
         private readonly IEmailServices _emailServices;
-        public SolicitacaoService(InnovationCoreDbContext context, IEmailServices emailServices)
+        private readonly ISetorService _setorServices;
+        public SolicitacaoService(InnovationCoreDbContext context, IEmailServices emailServices, ISetorService setorServices)
         {
             _context = context;
             _emailServices = emailServices;
+            _setorServices = setorServices;
         }
 
-       
+
 
         /// <summary>
         /// Cria a solicitação e já define ela como "Pendente" inicialmente
@@ -31,12 +33,14 @@ namespace InnovaCore.Services.Services
             solicitacao.IdUsuario = userId;
             _context.Solicitacoes.Add(solicitacao);
             await _context.SaveChangesAsync();
-            await _emailServices.SendStatusUpdateEmailAsync(email, solicitacao.Titulo, "Enviada");
+            await EnviarEmails(solicitacao.IdSetor, email, solicitacao.Titulo, solicitacao.Descricao, "Enviada");
         }
 
         public async Task<IEnumerable<Solicitacao>> ListarPendentes()
         {
-            return await _context.Solicitacoes.Where(s => s.IdSolicitacaoStatus == 1).ToListAsync();
+            return await _context.Solicitacoes
+                .Include( s => s.Setor)
+                .Where(s => s.IdSolicitacaoStatus == 1).ToListAsync();
         }
 
 
@@ -48,7 +52,7 @@ namespace InnovaCore.Services.Services
             if (solicitacao == null) return;
             solicitacao.IdSolicitacaoStatus = 2;
 
-
+            //Transformar em metodo no TarefaService
             Tarefa novatarefa = new Tarefa()
             {
                 Datacadastro = DateTime.Now,
@@ -60,8 +64,7 @@ namespace InnovaCore.Services.Services
 
             _context.Tarefas.Add(novatarefa);
             await _context.SaveChangesAsync();
-            await _emailServices.SendStatusUpdateEmailAsync(solicitacao.Usuario.Email, solicitacao.Titulo, "Aprovada");
-
+            await EnviarEmails(solicitacao.IdSetor, solicitacao.Usuario.Email, solicitacao.Titulo, solicitacao.Descricao, "aprovada");
         }
 
         public async Task RejeitarSolicitacao(int idSolicitacao, string justificativa)
@@ -73,7 +76,7 @@ namespace InnovaCore.Services.Services
             solicitacao.JustificativaRejeicao = justificativa;
             _context.Solicitacoes.Update(solicitacao);
             await _context.SaveChangesAsync();
-          //  await _emailServices.SendStatusUpdateEmailAsync(solicitacao.Usuario.Email, solicitacao.Titulo, "Inviabilizada");
+            await EnviarEmails(solicitacao.IdSetor, solicitacao.Usuario.Email, solicitacao.Titulo, solicitacao.Descricao, "Inviabilizada");
 
         }
 
@@ -81,11 +84,19 @@ namespace InnovaCore.Services.Services
         {
             return await _context.Solicitacoes
                  .Include(s => s.SolicitacaoStatus)
-                 .Include(s => s.Tema)
-                 .Include(s => s.Tarefa) // Carrega a tarefa vinculada
-                   .ThenInclude(t => t.TarefaStatus) // Carrega o status do Kanban
+                 .Include(s => s.Setor)
+                 .Include(s => s.Tarefa) 
+                   .ThenInclude(t => t.TarefaStatus) 
                  .Where(s => s.IdUsuario == IdUser)
+                 .OrderByDescending(s => s.Datacadastro)
                  .ToListAsync();
+        }
+
+        //transformar isso numa função do EmailServices
+        public async Task EnviarEmails(int? id, string userEmail, string tituloTarefa, string descricaoTarefa, string status)
+        {
+            await _emailServices.SendStatusUpdateEmailAsync(userEmail,tituloTarefa, status);
+            await _setorServices.EnviarEmailSetor(id, tituloTarefa, descricaoTarefa, status);
         }
 
     }

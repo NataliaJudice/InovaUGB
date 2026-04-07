@@ -29,7 +29,7 @@ namespace InnovaCore.Domain.Entities
         public int IdSolicitacaoStatus { get; set; }
         public SolicitacaoStatus SolicitacaoStatus { get; set; }
 
-        public Tarefa Tarefa { get; set; }
+        public Tarefa? Tarefa { get; set; }
 
         public int? IdTema {  get; set; }
         public Temas? Tema { get; set; }

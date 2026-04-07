@@ -13,11 +13,11 @@ namespace InnovaCore.Services.Services
     public class TemaService : ITemaService
     {
         private readonly InnovationCoreDbContext _context;
-        
+
         public TemaService(InnovationCoreDbContext context)
         {
             _context = context;
-            
+
         }
 
         public async Task<IEnumerable<Temas>> ObterTemasAtivos()

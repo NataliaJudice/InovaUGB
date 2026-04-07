@@ -72,6 +72,12 @@ namespace InnovaCore.Controllers
             return View(lvm);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AccessDenied()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {

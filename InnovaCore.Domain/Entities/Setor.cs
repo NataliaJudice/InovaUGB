@@ -14,8 +14,8 @@ namespace InnovaCore.Domain.Entities
         public string EmailResponsavel { get; set; }
         public DateTime DataCadastro { get; set; }
         public bool Status {  get; set; }
-        public string IdUsuario { get; set; }
-        public IdentityUser User { get; set; }
+        public string? IdUsuario { get; set; }
+        public IdentityUser? User { get; set; }
         public ICollection<Solicitacao> Solicitacoes { get; set; }
 
     }

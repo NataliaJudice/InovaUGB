@@ -13,7 +13,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => {
     options.Password.RequireLowercase = false;
 })
     .AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<InnovationCoreDbContext>(); 
+.AddEntityFrameworkStores<InnovationCoreDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -31,6 +38,8 @@ builder.Services.AddTransient<IEmailServices, EmailServices>();
 
 builder.Services.AddScoped<ITemaService, TemaService>();
 
+builder.Services.AddScoped<ISetorService, SetorService>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
@@ -41,10 +50,10 @@ var app = builder.Build();
 
 //using (var scope = app.Services.CreateScope())
 //{
-    //var services = scope.ServiceProvider;
-    // Note que usamos "await", então o método Main precisaria ser "async Task Main" 
-    // ou usamos .GetAwaiter().GetResult() se for o estilo antigo do Program.cs
-  //  await DbInitializer.SeedRolesAndAdminAsync(services);
+//var services = scope.ServiceProvider;
+// Note que usamos "await", então o método Main precisaria ser "async Task Main" 
+// ou usamos .GetAwaiter().GetResult() se for o estilo antigo do Program.cs
+//  await DbInitializer.SeedRolesAndAdminAsync(services);
 //}
 
 // Configure the HTTP request pipeline.

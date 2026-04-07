@@ -1,0 +1,142 @@
+﻿@model InnovaCore.Domain.Entities.Setor
+
+@{
+    ViewData["Title"] = "Novo Setor";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --kanban-bg: #050505;
+        --col-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --card-bg: #161b22;
+        --border-color: #30363d;
+    }
+
+    body {
+        background-color: var(--kanban-bg) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        background: var(--col-bg);
+        border-radius: 25px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+    }
+
+    .header-section h1 {
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 1.8rem;
+    }
+
+    .detail-label {
+        color: var(--cyan-neon);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .form-control-dark {
+        background: #050505;
+        border: 1px solid #30363d;
+        color: #fff;
+        border-radius: 12px;
+        padding: 15px;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+        .form-control-dark:focus {
+            background: #050505;
+            border-color: var(--cyan-neon);
+            color: #fff;
+            box-shadow: 0 0 10px var(--cyan-neon);
+            outline: none;
+        }
+
+    .btn-neon-save {
+        background: var(--cyan-neon);
+        color: #000;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 30px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+        .btn-neon-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--cyan-neon);
+            background: #fff;
+        }
+
+    .btn-back {
+        color: #8b949e;
+        text-decoration: none;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 20px;
+        transition: color 0.3s;
+    }
+
+        .btn-back:hover {
+            color: var(--cyan-neon);
+        }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <a href="@Url.Action("Index", "Setor")" class="btn-back">
+            <i class="bi bi-arrow-left"></i> VOLTAR PARA LISTAGEM
+        </a>
+
+        <div class="header-section mb-4">
+            <h1>NOVO <span style="color:var(--cyan-neon)">SETOR</span></h1>
+            <p class="text-white-50 small">Inicie um novo terminal de operações no sistema.</p>
+        </div>
+
+        <form asp-action="CriarSetor" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-4">
+                <label class="detail-label">NOME DO SETOR</label>
+                <input asp-for="Nome" class="form-control-dark" placeholder="Ex: Tecnologia, RH, Financeiro..." required />
+                <span asp-validation-for="Nome" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label class="detail-label">EMAIL DO RESPONSÁVEL</label>
+                <input asp-for="EmailResponsavel" type="email" class="form-control-dark" placeholder="email@empresa.com" required />
+                <span asp-validation-for="EmailResponsavel" class="text-danger small"></span>
+            </div>
+
+            <div class="mt-2">
+                <button type="submit" class="btn-neon-save">
+                    CONFIRMAR CADASTRO
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

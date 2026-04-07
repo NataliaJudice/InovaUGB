@@ -1,0 +1,284 @@
+﻿@model IEnumerable<InnovaCore.Domain.Entities.Setor>
+
+@{
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --kanban-bg: #050505;
+        --col-bg: #0d1117;
+        --cyan-neon: #00e5ff;
+        --card-bg: #161b22;
+        --border-color: #30363d;
+    }
+
+    body {
+        background-color: var(--kanban-bg) !important;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* HEADER E BOTÃO ADICIONAR */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px 50px 10px 50px;
+    }
+
+    .btn-neon-add {
+        background: var(--cyan-neon);
+        color: #000 !important;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    }
+
+        .btn-neon-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+            background: #fff;
+        }
+
+    /* TABELA */
+    .table-container {
+        padding: 40px;
+        background: var(--col-bg);
+        border-radius: 50px; /* Aumentado de 25px para 50px */
+        border: 1px solid var(--border-color);
+        margin: 20px 40px;
+        overflow: hidden; /* Garante que o conteúdo respeite a borda arredondada */
+    }
+
+    .custom-table {
+        color: #fff;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        width: 100%;
+    }
+
+        .custom-table thead th {
+            border: none;
+            color: var(--cyan-neon);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+
+        /* TABELA - CARDS ARREDONDADOS */
+        .custom-table tbody tr {
+            background: var(--card-bg);
+            transition: transform 0.2s;
+        }
+
+        .custom-table tbody td {
+            border: none !important; /* Remove a linha branca feia */
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+            /* Arredonda o canto esquerdo da linha */
+            .custom-table tbody tr td:first-child {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+
+            /* Arredonda o canto direito da linha */
+            .custom-table tbody tr td:last-child {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            .custom-table tbody tr:hover {
+                transform: scale(1.01); /* Um toque extra no zoom para destacar o arredondamento */
+                background: #1c2128;
+            }
+
+    .btn-neon-edit {
+        background: transparent;
+        color: var(--cyan-neon);
+        border: 1px solid var(--cyan-neon);
+        border-radius: 8px;
+        padding: 5px 15px;
+        transition: 0.3s;
+    }
+
+        .btn-neon-edit:hover {
+            background: var(--cyan-neon);
+            color: #000;
+            box-shadow: 0 0 10px var(--cyan-neon);
+        }
+
+    /* MODAL */
+    .modal-content {
+        background-color: #0d1117;
+        border: 1px solid var(--cyan-neon);
+        border-radius: 20px;
+        color: #fff;
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+    }
+
+    .form-control-dark {
+        background: #050505;
+        border: 1px solid #30363d;
+        color: #fff;
+        border-radius: 10px;
+        padding: 12px;
+    }
+
+        .form-control-dark:focus {
+            background: #050505;
+            border-color: var(--cyan-neon);
+            color: #fff;
+            box-shadow: 0 0 8px var(--cyan-neon);
+            outline: none;
+        }
+
+    .detail-label {
+        color: var(--cyan-neon);
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="header-container">
+        <h1 style="font-weight:900; letter-spacing:2px; margin:0;">
+            GESTÃO DE <span style="color:var(--cyan-neon)">SETORES</span>
+        </h1>
+
+        <a href="@Url.Action("CriarSetor", "Setor")" class="btn-neon-add">
+            <i class="bi bi-plus-lg" style="font-size: 1.2rem; -webkit-text-stroke: 1px;"></i>
+            NOVO SETOR
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOME DO SETOR</th>
+                    <th>EMAIL RESPONSÁVEL</th>
+                    <th>STATUS</th>
+                    <th class="text-end">AÇÕES</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var setor in Model)
+                {
+                    <tr>
+                        <td style="color:var(--cyan-neon)">#@setor.Id</td>
+                        <td class="fw-bold">@setor.Nome</td>
+                        <td class="text-white-50">@setor.EmailResponsavel</td>
+                        <td>
+                            <span class="badge @(setor.Status ? "bg-success" : "bg-danger")" style="border-radius: 20px; padding: 5px 12px;">
+                                @(setor.Status ? "Ativo" : "Inativo")
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-neon-edit btn-sm"
+                                    onclick="abrirEdicao('@setor.Id', '@setor.Nome', '@setor.EmailResponsavel')">
+                                <i class="bi bi-pencil-square me-1"></i> EDITAR
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarSetor" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">EDITAR TERMINAL: <span id="labelNomeSetor" style="color:var(--cyan-neon)"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="formEditarSetor">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="hidden" name="Id" id="editId" />
+
+                    <div class="mb-3">
+                        <label class="detail-label d-block mb-2">NOME DO SETOR</label>
+                        <input type="text" name="Nome" id="editNome" class="form-control form-control-dark" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="detail-label d-block mb-2">EMAIL DO RESPONSÁVEL</label>
+                        <input type="email" name="EmailResponsavel" id="editEmail" class="form-control form-control-dark" required />
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+                    <button type="submit" id="btnSalvar" class="btn btn-info rounded-pill fw-bold px-4" style="background:var(--cyan-neon); color:#000; border:none;">SALVAR ALTERAÇÕES</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modalEdit = new bootstrap.Modal(document.getElementById('modalEditarSetor'));
+        const form = document.getElementById('formEditarSetor');
+
+        function abrirEdicao(id, nome, email) {
+            form.reset();
+            document.getElementById('editId').value = id;
+            document.getElementById('editNome').value = nome;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('labelNomeSetor').innerText = nome;
+            modalEdit.show();
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = true;
+            btn.innerText = "PROCESSANDO...";
+
+            const id = document.getElementById('editId').value;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(`/Setor/EditarSetor/${id}`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
+
+                if (response.ok) {
+                    window.location.href = '@Url.Action("Index", "Setor")';
+                } else {
+                    const errorText = await response.text();
+                    console.error("Erro do Servidor:", errorText);
+                    alert("Erro na validação: " + errorText);
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Falha crítica ao conectar com o terminal.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "SALVAR ALTERAÇÕES";
+            }
+        });
+    </script>
+}

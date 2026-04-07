@@ -1,5 +1,5 @@
 ﻿@using System.Web
-@model IEnumerable<InnovaCore.Domain.Entities.Temas>
+@model IEnumerable<InnovaCore.Domain.Entities.Setor>
 
 @{
     Layout = "_Layout";
@@ -195,12 +195,12 @@
             </div>
 
             <div class="field-group">
-                <label class="label-cyber" for="IdTema">Setor de destino</label>
-                <select id="IdTema" name="IdTema" class="input-cyber" required>
+                <label class="label-cyber" for="IdSetor">Setor de destino</label>
+                <select id="IdSetor" name="IdSetor" class="input-cyber" required>
                     <option value="" disabled selected>Selecione o setor...</option>
                     @foreach (var tema in Model)
                     {
-                        <option value="@tema.Id">@tema.TituloTema</option>
+                        <option value="@tema.Id">@tema.Nome</option>
                     }
                 </select>
             </div>

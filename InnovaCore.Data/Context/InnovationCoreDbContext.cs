@@ -29,6 +29,8 @@ namespace InnovaCore.Data.Context
         public DbSet<TarefaStatus> TarefaStatus { get; set; }
 
         public DbSet<VwDashboardQtde> VwDashboardQtdes { get; set; }
+
+        public DbSet<VwQtdePorSetor> VwQtdePorSetor { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -101,6 +103,10 @@ namespace InnovaCore.Data.Context
             modelBuilder.Entity<VwDashboardQtde>().HasNoKey();
 
             modelBuilder.Entity<VwDashboardQtde>().ToView("VwDashboardQtde");
+
+            modelBuilder.Entity<VwQtdePorSetor>().HasNoKey();
+
+            modelBuilder.Entity<VwQtdePorSetor>().ToView("VwQtdePorSetor");
 
 
         }

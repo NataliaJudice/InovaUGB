@@ -18,5 +18,10 @@ namespace InnovaCore.Services.Services
             return await _context.VwDashboardQtdes.FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<VwQtdePorSetor>> GetQtdesPorSetor()
+        {
+            return await _context.VwQtdePorSetor.ToListAsync();
+        }
+
     }
 }

@@ -16,6 +16,7 @@ namespace InnovaCore.Controllers
             _dashboardService = dashboardService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -26,24 +27,32 @@ namespace InnovaCore.Controllers
             return View();
         }
 
+        [HttpGet]
         [Authorize] // Só entra aqui quem logou
         public IActionResult Hub()
         {
             return View();
         }
 
-        [Authorize] // Só entra aqui quem logou
+        [HttpGet]
+        [Authorize]
+        [Authorize(Roles = "Admin")]// Só entra aqui quem logou
         public IActionResult HubAdmin()
         {
             return View();
         }
 
-        [Authorize] // Só entra aqui quem logou
+        [HttpGet]
+        [Authorize]
+        [Authorize(Roles = "Admin")]// Só entra aqui quem logou
         public async Task<IActionResult> Comando()
         {
             var qtdes = await _dashboardService.GetQtdes();
+            var qtdeporSetor = await _dashboardService.GetQtdesPorSetor();
+            
             ViewModelDashboard vm = new ViewModelDashboard();
             vm.VwDashboardQtde = qtdes;
+            vm.VwQtdePorSetor = qtdeporSetor;
 
             return View(vm);
         }
