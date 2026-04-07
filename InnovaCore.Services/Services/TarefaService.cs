@@ -9,11 +9,12 @@ namespace InnovaCore.Services.Services
     {
         private readonly InnovationCoreDbContext _context;
         private readonly IEmailServices _emailServices;
-
-        public TarefaService(InnovationCoreDbContext context, IEmailServices emailServices)
+        private readonly ISetorService _setorServices;
+        public TarefaService(InnovationCoreDbContext context, IEmailServices emailServices, ISetorService setorServices)
         {
             _context = context;
             _emailServices = emailServices;
+            _setorServices = setorServices;
         }
 
 
@@ -32,7 +33,7 @@ namespace InnovaCore.Services.Services
             await _context.SaveChangesAsync();
 
             await _emailServices.SendStatusUpdateEmailAsync(solicitacao.Usuario.Email, solicitacao.Titulo, status.Nome);
-
+            await _setorServices.EnviarEmailSetor(solicitacao.IdSetor, solicitacao.Titulo, solicitacao.Descricao, status.Nome);
 
         }
 
