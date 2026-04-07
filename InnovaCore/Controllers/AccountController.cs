@@ -1,4 +1,5 @@
-﻿using InnovaCore.ViewModels;
+﻿using InnovaCore.Domain.Entities;
+using InnovaCore.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.Arm;
@@ -26,7 +27,7 @@ namespace InnovaCore.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = rvm.Email, Email = rvm.Email, NormalizedUserName = rvm.UserName };
+                var user = new IdentityUser { UserName = rvm.UserName, Email = rvm.Email, NormalizedUserName = rvm.UserName };
                 var result = await _userManager.CreateAsync(user, rvm.Password);
 
                 if (result.Succeeded)
@@ -52,22 +53,31 @@ namespace InnovaCore.Controllers
 
             if (ModelState.IsValid)
             {
+                // 1. Procurar o usuário pelo email digitado
+                var user = await _userManager.FindByEmailAsync(lvm.Email);
 
-
-                var result = await _signInManager.PasswordSignInAsync(lvm.Email, lvm.Password, lvm.rememberme, lockoutOnFailure: false);
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    if (User.IsInRole("Admin"))
+                    var result = await _signInManager.PasswordSignInAsync(
+                        user.UserName,
+                        lvm.Password,
+                        lvm.rememberme,
+                        lockoutOnFailure: false);
+
+                    if (result.Succeeded)
                     {
-                        // Se for admin, vai para a tela de escolha (HubAdmin)
-                        return RedirectToAction("HubAdmin", "Home");
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        if (roles.Contains("Admin"))
+                        {
+                            return RedirectToAction("HubAdmin", "Home");
+                        }
+
+                        return RedirectToAction("Hub", "Home");
                     }
-
-                    // Se for aluno, vai direto para a tela de protocolos (Hub)
-                    return RedirectToAction("Hub", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Tentativa de login inválida. Verifique suas credenciais.");
 
+                ModelState.AddModelError(string.Empty, "Tentativa de login inválida.");
             }
             return View(lvm);
         }
