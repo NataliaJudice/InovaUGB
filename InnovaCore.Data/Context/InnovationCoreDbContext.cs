@@ -80,7 +80,6 @@ namespace InnovaCore.Data.Context
                 .HasForeignKey(s => s.IdSetor)
                 .OnDelete(DeleteBehavior.SetNull);
 
-
           //TAREFAS
             modelBuilder.Entity<Tarefa>(entity =>
             {
@@ -98,16 +97,11 @@ namespace InnovaCore.Data.Context
                 ;
             });
 
-           
             //VIEWS
             modelBuilder.Entity<VwDashboardQtde>().HasNoKey();
-
             modelBuilder.Entity<VwDashboardQtde>().ToView("VwDashboardQtde");
-
             modelBuilder.Entity<VwQtdePorSetor>().HasNoKey();
-
             modelBuilder.Entity<VwQtdePorSetor>().ToView("VwQtdePorSetor");
-
 
         }
     }
