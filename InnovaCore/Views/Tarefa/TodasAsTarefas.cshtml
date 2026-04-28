@@ -78,7 +78,7 @@
         margin: 0;
     }
 
-    /* CARDS - AJUSTADO PARA EVITAR OVERFLOW */
+    /* CARDS */
     .kanban-card {
         background: var(--card-bg);
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -88,7 +88,6 @@
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        /* Impede que o card cresça infinitamente para os lados */
         max-width: 100%;
         overflow: hidden;
     }
@@ -114,7 +113,6 @@
         margin-bottom: 15px;
         display: block;
         line-height: 1.4;
-        /* TRUNCAMENTO DE TEXTO NO CARD */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -122,7 +120,6 @@
 
     .card-footer-info {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         font-size: 0.7rem;
         color: #888;
@@ -130,7 +127,7 @@
         padding-top: 12px;
     }
 
-    /* MODAL CONSERTADO */
+    /* MODAL */
     .modal-content {
         background-color: #0d1117;
         border: 1px solid #30363d;
@@ -143,7 +140,6 @@
     .modal-header { border: none; padding-bottom: 1rem; }
     .modal-footer { border: none; padding-top: 1rem; }
     
-    /* TITULO NO MODAL - AJUSTADO PARA QUEBRAR LINHA */
     .modal-title {
         word-break: break-all;
         line-height: 1.2;
@@ -166,7 +162,6 @@
         color: #8b949e;
         font-size: 0.9rem;
         line-height: 1.6;
-        /* CONSERTO DO BUG DE TEXTO SAINDO DO MODAL */
         word-wrap: break-word;
         overflow-wrap: break-word;
         word-break: break-all;
@@ -205,12 +200,20 @@
                              data-desc="@tarefa.Solicitacao?.Descricao"
                              data-setor="@tarefa.Solicitacao?.Tema?.TituloTema"
                              data-date="@tarefa.Datacadastro?.ToString("dd/MM/yyyy HH:mm")"
+                             data-responsavel="@tarefa.NomeResponsavel"
                              onclick="verDetalhes(this)">
+                            
                             <span class="card-id js-card-id" style="color: @status.Cor">#@tarefa.Id</span>
                             <span class="card-title" title="@tarefa.Solicitacao?.Titulo">@tarefa.Solicitacao?.Titulo</span>
+                            
                             <div class="card-footer-info">
                                 <span><i class="bi bi-clock me-1"></i> @tarefa.Datacadastro?.ToString("dd/MM")</span>
-                                <i class="bi bi-arrow-right-short fs-5"></i>
+                                
+                                <span class="js-card-responsavel text-truncate ms-2" style="max-width: 100px; color: var(--cyan-neon);">
+                                    @(string.IsNullOrEmpty(tarefa.NomeResponsavel) ? "Sem responsável" : tarefa.NomeResponsavel)
+                                </span>
+                                
+                                <i class="bi bi-arrow-right-short fs-5 ms-auto"></i>
                             </div>
                         </div>
                     }
@@ -239,6 +242,26 @@
                     </div>
                 </div>
                 
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <p class="detail-label">Responsável</p>
+                        
+                        <div id="boxMostrarResponsavel">
+                            <span id="mResponsavelNome" class="text-white fw-bold me-2"></span>
+                            <button id="btnAdicionarResponsavel" class="btn btn-sm btn-outline-info rounded-pill" onclick="mostrarInputResponsavel(event)">
+                                + Adicionar responsável
+                            </button>
+                        </div>
+
+                        <div id="boxEditarResponsavel" style="display: none;" class="mt-2">
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="inputResponsavel" class="form-control bg-dark text-white border-secondary" placeholder="Digite o nome..." autocomplete="off">
+                                <button class="btn btn-info" type="button" onclick="salvarResponsavel(event)">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <p class="detail-label">Especificações Técnicas</p>
                 <div id="mDesc" class="desc-box"></div>
             </div>
@@ -252,6 +275,8 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
+        let cardAtualAberto = null;
+
         document.querySelectorAll('.card-list').forEach(el => {
             new Sortable(el, {
                 group: 'kanban',
@@ -269,10 +294,13 @@
         });
 
         function verDetalhes(card) {
+            cardAtualAberto = card;
+            
             const titulo = card.getAttribute('data-titulo');
             const desc = card.getAttribute('data-desc');
             const setor = card.getAttribute('data-setor');
             const date = card.getAttribute('data-date');
+            const responsavel = card.getAttribute('data-responsavel');
             const statusName = card.parentElement.getAttribute('data-status-name');
             const cor = card.parentElement.getAttribute('data-color');
 
@@ -285,8 +313,71 @@
             statusEl.innerText = statusName;
             statusEl.style.color = cor;
 
+            // Configuração do Responsável
+            const spanNome = document.getElementById('mResponsavelNome');
+            const btnAdd = document.getElementById('btnAdicionarResponsavel');
+            const boxEdicao = document.getElementById('boxEditarResponsavel');
+            const inputResp = document.getElementById('inputResponsavel');
+
+            boxEdicao.style.display = 'none';
+            inputResp.value = '';
+
+            if (!responsavel || responsavel.trim() === '') {
+                spanNome.innerText = '';
+                btnAdd.style.display = 'inline-block';
+            } else {
+                spanNome.innerText = responsavel;
+                btnAdd.style.display = 'none';
+            }
+
             new bootstrap.Modal(document.getElementById('modalTarefa')).show();
         }
+
+        function mostrarInputResponsavel(event) {
+            event.stopPropagation();
+            document.getElementById('btnAdicionarResponsavel').style.display = 'none';
+            document.getElementById('boxEditarResponsavel').style.display = 'block';
+            document.getElementById('inputResponsavel').focus();
+        }
+
+        async function salvarResponsavel(event) {
+            event.stopPropagation();
+            
+            const novoNome = document.getElementById('inputResponsavel').value;
+            if (!novoNome || novoNome.trim() === '') return;
+
+            const tarefaId = cardAtualAberto.getAttribute('data-id');
+
+            try {
+                // Certifique-se de que a URL corresponde à rota da sua Controller
+                const response = await fetch('/Tarefa/AtribuirResponsavel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idTarefa: parseInt(tarefaId), nomeResponsavel: novoNome })
+                });
+
+                if (response.ok) {
+                    // Atualiza o Modal
+                    document.getElementById('boxEditarResponsavel').style.display = 'none';
+                    document.getElementById('mResponsavelNome').innerText = novoNome;
+                    document.getElementById('btnAdicionarResponsavel').style.display = 'none';
+                    
+                    // Atualiza o Card na tela de fundo
+                    cardAtualAberto.setAttribute('data-responsavel', novoNome);
+                    const spanResponsavelCard = cardAtualAberto.querySelector('.js-card-responsavel');
+                    if(spanResponsavelCard) {
+                        spanResponsavelCard.innerText = novoNome;
+                    }
+                } else {
+                    alert('Erro ao atribuir responsável.');
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert('Falha de conexão com o servidor.');
+            }
+        }
+
+        
 
         function updateTarefaStatus(id, status) {
             fetch('/Tarefa/MudarStatus', {

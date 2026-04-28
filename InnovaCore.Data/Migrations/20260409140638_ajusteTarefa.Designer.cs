@@ -4,6 +4,7 @@ using InnovaCore.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnovaCore.Data.Migrations
 {
     [DbContext(typeof(InnovationCoreDbContext))]
-    partial class InnovationCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409140638_ajusteTarefa")]
+    partial class ajusteTarefa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("Setor", (string)null);
+                    b.ToTable("Setor");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.Solicitacao", b =>
@@ -107,7 +110,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasIndex("UsuarioAlteracaoStatus");
 
-                    b.ToTable("Solicitacoes", (string)null);
+                    b.ToTable("Solicitacoes");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.SolicitacaoStatus", b =>
@@ -130,7 +133,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SolicitacaoStatus", (string)null);
+                    b.ToTable("SolicitacaoStatus");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.Tarefa", b =>
@@ -166,7 +169,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasIndex("IdTarefaStatus");
 
-                    b.ToTable("Tarefas", (string)null);
+                    b.ToTable("Tarefas");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.TarefaStatus", b =>
@@ -189,7 +192,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TarefaStatus", (string)null);
+                    b.ToTable("TarefaStatus");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.Temas", b =>
@@ -212,7 +215,7 @@ namespace InnovaCore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Temas", (string)null);
+                    b.ToTable("Temas");
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.VwDashboardQtde", b =>

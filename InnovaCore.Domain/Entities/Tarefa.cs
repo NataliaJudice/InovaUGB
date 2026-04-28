@@ -19,6 +19,8 @@ namespace InnovaCore.Domain.Entities
         public int IdTarefaStatus { get; set; }
         public TarefaStatus TarefaStatus { get; set; }
 
+        public string? NomeResponsavel {  get; set; }
+
        public bool Status {  get; set; }
     }
 }

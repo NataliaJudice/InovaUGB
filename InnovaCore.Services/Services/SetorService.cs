@@ -32,7 +32,7 @@ namespace InnovaCore.Services.Services
             // Garantimos os valores padrão aqui no servidor
             setor.DataCadastro = DateTime.Now;
             setor.Status = true;
-
+            //setor.EmailResponsavel = "exemplo@gmail.com";
             _context.Setor.Add(setor);
             await _context.SaveChangesAsync();
         }
@@ -55,8 +55,8 @@ namespace InnovaCore.Services.Services
         public async Task EnviarEmailSetor(int? id, string taskTitle, string descricaoTarefa, string status)
         {
             var setor = await _context.Setor.FirstOrDefaultAsync(s => s.Id==id);
-            var emailSetor = setor.EmailResponsavel;
-            await _emailService.SendStatusUpdateEmailAsyncSetores(emailSetor, taskTitle, descricaoTarefa, status);    
+            //var emailSetor = setor.EmailResponsavel;
+            await _emailService.SendStatusUpdateEmailAsyncSetores("natyang873@gmail.com", taskTitle, descricaoTarefa, status);    
         }
     }
 }

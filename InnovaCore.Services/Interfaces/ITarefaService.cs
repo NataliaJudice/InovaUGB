@@ -11,5 +11,6 @@ namespace InnovaCore.Services.Interfaces
     {
         Task<IEnumerable<Tarefa>> GetAll();
         Task MudarStatus(int novoStatus, int idTarefa);
+        Task AtribuirResponsavel(int idTarefa, string nomeResponsavel);
     }
 }

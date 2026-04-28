@@ -17,7 +17,14 @@ namespace InnovaCore.Services.Services
             _setorServices = setorServices;
         }
 
+        public async Task AtribuirResponsavel(int idTarefa, string nomeResponsavel)
+        {
+            var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == idTarefa);
+            tarefa.NomeResponsavel = nomeResponsavel;
+            _context.Update(tarefa);
+            await _context.SaveChangesAsync();
 
+        }
         public async Task MudarStatus(int novoStatus, int idTarefa)
         {
 

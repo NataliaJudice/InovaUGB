@@ -42,8 +42,7 @@ namespace InnovaCore.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Se o código chegar aqui, significa que a validação FALHOU.
-            // Em vez de redirecionar e esconder o erro, voltamos para a View para mostrar o que houve.
+        
             return View(setor);
         }
 
