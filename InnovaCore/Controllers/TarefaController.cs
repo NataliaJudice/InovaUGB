@@ -1,5 +1,6 @@
 ﻿using InnovaCore.Domain.ViewModels;
 using InnovaCore.Services.Interfaces;
+using InnovaCore.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +37,39 @@ namespace InnovaCore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AtribuirResponsavel([FromBody] ViewModelAtribuirResponsavel request)
+        {
+            try
+            {
+                await _tarefaService.AtribuirResponsavel(request.idTarefa, request.nomeResponsavel);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> MudarStatus([FromBody] ViewModelTarefaEStatus model)
         {
-
             if (model == null) return BadRequest();
+            try
+            {
 
-            await _tarefaService.MudarStatus(model.novoStatus, model.idTarefa);
+                await _tarefaService.MudarStatus(model.novoStatus, model.idTarefa);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
 
 
-            return Ok();
         }
 
     }

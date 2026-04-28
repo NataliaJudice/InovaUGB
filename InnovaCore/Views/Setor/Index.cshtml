@@ -171,7 +171,7 @@
                 <tr>
                     <th>ID</th>
                     <th>NOME DO SETOR</th>
-                    <th>EMAIL RESPONSÁVEL</th>
+                    @* <th>EMAIL RESPONSÁVEL</th> *@
                     <th>STATUS</th>
                     <th class="text-end">AÇÕES</th>
                 </tr>
@@ -182,7 +182,7 @@
                     <tr>
                         <td style="color:var(--cyan-neon)">#@setor.Id</td>
                         <td class="fw-bold">@setor.Nome</td>
-                        <td class="text-white-50">@setor.EmailResponsavel</td>
+                        @* <td class="text-white-50">@setor.EmailResponsavel</td> *@
                         <td>
                             <span class="badge @(setor.Status ? "bg-success" : "bg-danger")" style="border-radius: 20px; padding: 5px 12px;">
                                 @(setor.Status ? "Ativo" : "Inativo")
