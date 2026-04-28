@@ -4,6 +4,7 @@ using InnovaCore.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnovaCore.Data.Migrations
 {
     [DbContext(typeof(InnovationCoreDbContext))]
-    partial class InnovationCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260428171320_ADDSTATUSsolicta")]
+    partial class ADDSTATUSsolicta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

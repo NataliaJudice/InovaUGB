@@ -25,6 +25,14 @@ namespace InnovaCore.Services.Services
             await _context.SaveChangesAsync();
 
         }
+        public async Task DeletarResponsavel(int idTarefa)
+        {
+            var tarefa = await _context.Tarefas.FirstOrDefaultAsync(x => x.Id == idTarefa);
+            tarefa.NomeResponsavel = null;
+            _context.Update(tarefa);
+            await _context.SaveChangesAsync();
+
+        }
         public async Task MudarStatus(int novoStatus, int idTarefa)
         {
 

@@ -4,6 +4,7 @@ using InnovaCore.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnovaCore.Data.Migrations
 {
     [DbContext(typeof(InnovationCoreDbContext))]
-    partial class InnovationCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260428171047_ADDSTATUSsolic")]
+    partial class ADDSTATUSsolic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,21 +139,21 @@ namespace InnovaCore.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9870),
+                            DataCadastro = new DateTime(2026, 4, 28, 14, 10, 47, 125, DateTimeKind.Local).AddTicks(835),
                             NomeStatus = "Enviada",
                             Status = true
                         },
                         new
                         {
                             Id = 2,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9872),
+                            DataCadastro = new DateTime(2026, 4, 28, 14, 10, 47, 125, DateTimeKind.Local).AddTicks(854),
                             NomeStatus = "Aprovada",
                             Status = true
                         },
                         new
                         {
                             Id = 3,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9873),
+                            DataCadastro = new DateTime(2026, 4, 28, 14, 10, 47, 125, DateTimeKind.Local).AddTicks(856),
                             NomeStatus = "Inviabilizada",
                             Status = true
                         });
@@ -213,29 +216,6 @@ namespace InnovaCore.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TarefaStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 7,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9720),
-                            Nome = "Pendente",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 8,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9733),
-                            Nome = "Em Andamento",
-                            Status = true
-                        },
-                        new
-                        {
-                            Id = 9,
-                            DataCadastro = new DateTime(2026, 4, 28, 14, 13, 19, 868, DateTimeKind.Local).AddTicks(9735),
-                            Nome = "Concluída",
-                            Status = true
-                        });
                 });
 
             modelBuilder.Entity("InnovaCore.Domain.Entities.Temas", b =>

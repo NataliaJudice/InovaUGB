@@ -50,18 +50,13 @@ namespace InnovaCore.Controllers
             }
 
         }
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> MudarStatus([FromBody] ViewModelTarefaEStatus model)
+        public async Task<IActionResult> DeletarResponsavel([FromBody] ViewModelAtribuirResponsavel request)
         {
-            if (model == null) return BadRequest();
             try
             {
-
-                await _tarefaService.MudarStatus(model.novoStatus, model.idTarefa);
-
+                await _tarefaService.DeletarResponsavel(request.idTarefa);
                 return Ok();
             }
             catch (Exception ex)
@@ -69,8 +64,26 @@ namespace InnovaCore.Controllers
                 return StatusCode(500, ex.Message);
             }
 
-
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> MudarStatus([FromBody] ViewModelTarefaEStatus model)
+        {
+            if (model == null) 
+                return BadRequest();
+
+            try
+            {
+                await _tarefaService.MudarStatus(model.novoStatus, model.idTarefa);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
