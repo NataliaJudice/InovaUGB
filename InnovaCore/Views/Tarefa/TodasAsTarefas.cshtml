@@ -245,9 +245,16 @@
                     <div class="col-12">
                         <p class="detail-label">Responsável</p>
                         
-                        <div id="boxMostrarResponsavel">
+                        <div id="boxMostrarResponsavel" class="d-flex align-items-center">
                             <span id="mResponsavelNome" class="text-white fw-bold me-2"></span>
-                            <button id="btnAdicionarResponsavel" class="btn btn-sm btn-outline-info rounded-pill" onclick="mostrarInputResponsavel(event)">
+
+                            <i id="btnEditarResponsavel" class="bi bi-pencil-square text-info cursor-pointer me-3"
+                               style="cursor: pointer; display: none;"
+                               onclick="mostrarInputResponsavel(event)"
+                               title="Editar responsável"></i>
+
+                            <button id="btnAdicionarResponsavel" class="btn btn-sm btn-outline-info rounded-pill"
+                                    onclick="mostrarInputResponsavel(event)">
                                 + Adicionar responsável
                             </button>
                         </div>
@@ -313,21 +320,25 @@
             statusEl.style.color = cor;
 
             // Configuração do Responsável
-            const spanNome = document.getElementById('mResponsavelNome');
-            const btnAdd = document.getElementById('btnAdicionarResponsavel');
-            const boxEdicao = document.getElementById('boxEditarResponsavel');
-            const inputResp = document.getElementById('inputResponsavel');
+                   // Configuração do Responsável no Modal
+        const spanNome = document.getElementById('mResponsavelNome');
+        const btnAdd = document.getElementById('btnAdicionarResponsavel');
+        const btnEdit = document.getElementById('btnEditarResponsavel'); // Novo elemento
+        const boxEdicao = document.getElementById('boxEditarResponsavel');
+        const inputResp = document.getElementById('inputResponsavel');
 
-            boxEdicao.style.display = 'none';
-            inputResp.value = '';
+        boxEdicao.style.display = 'none';
+        inputResp.value = '';
 
-            if (!responsavel || responsavel.trim() === '') {
-                spanNome.innerText = '';
-                btnAdd.style.display = 'inline-block';
-            } else {
-                spanNome.innerText = responsavel;
-                btnAdd.style.display = 'none';
-            }
+        if (!responsavel || responsavel.trim() === '') {
+            spanNome.innerText = '';
+            btnAdd.style.display = 'inline-block';
+            btnEdit.style.display = 'none'; // Esconde o lápis se não tem ninguém
+        } else {
+            spanNome.innerText = responsavel;
+            btnAdd.style.display = 'none';   // Esconde o botão de adicionar
+            btnEdit.style.display = 'inline-block'; // Mostra o lápis
+        }
 
             new bootstrap.Modal(document.getElementById('modalTarefa')).show();
         }
@@ -356,12 +367,10 @@
                 });
 
                 if (response.ok) {
-                    // Atualiza o Modal
                     document.getElementById('boxEditarResponsavel').style.display = 'none';
                     document.getElementById('mResponsavelNome').innerText = novoNome;
                     document.getElementById('btnAdicionarResponsavel').style.display = 'none';
                     
-                    // Atualiza o Card na tela de fundo
                     cardAtualAberto.setAttribute('data-responsavel', novoNome);
                     const spanResponsavelCard = cardAtualAberto.querySelector('.js-card-responsavel');
                     if(spanResponsavelCard) {
